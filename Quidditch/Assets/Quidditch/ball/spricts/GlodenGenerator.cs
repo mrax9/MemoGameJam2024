@@ -4,7 +4,7 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class GoldenGenerator : MonoBehaviour
+public class WalkBallGenerator : MonoBehaviour
 {
     public float generateLength;
     public float generateWidth;
