@@ -15,6 +15,7 @@ TagManager:
   - player2score
   - Player1
   - Player2
+  - walkballgenerator
   layers:
   - Default
   - TransparentFX
