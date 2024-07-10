@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     public float speed = 3;
     public GameObject BulletPrefab;
+    public int playerid = 1;
     private Rigidbody2D _Rigid;
     private SpriteRenderer _Sr;
     private Skill skill;
@@ -24,11 +25,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
+        float x = Input.GetAxis("Horizontalplayer" + playerid);
+        float y = Input.GetAxis("Verticalplayer" + playerid);
         Move(x, y);
         Flip(x);
-        UseSkill(x, y);
+        UseSkill(x, y, playerid);
     }
 
     void Move(float x, float y)
@@ -96,55 +97,110 @@ public class Player : MonoBehaviour
             Destroy(prof);
         }
     }
-    void UseSkill(float x, float y)
+    void UseSkill(float x, float y,int playerid)
     {
-        if (skill != null && Input.GetKeyUp(KeyCode.Space))
+        if (playerid == 1)
         {
-            Debug.Log($"我使用了{skillName}");
-            switch (skillName)
+            if (skill != null && Input.GetKeyUp(KeyCode.Space))
             {
-                case "cloaking":
-                    if (!((Cloaking)skill).isUsed) 
-                    {
-                        //使用隐身
-                        Debug.Log("我使用了隐身");
-                        _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
-                        ((Cloaking)skill).isUsed = true;
-                        isCloaking = true;
-                    }
-                    break;
-                case "shield":
-                    if (!((Shield)skill).isUsed)
-                    {
-                        //使用护盾
-                        Debug.Log("我使用了护盾");
-                        ((Shield)skill).isUsed = true;
-                        isShielding = true;
-                    }
-                    break;
-                case "attack":
-                    GameObject bulletObj = Instantiate(BulletPrefab);
-                    bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized * 1;
-                    Bullet bullet = bulletObj.GetComponent<Bullet>();
-                    if (x == 0 && y == 0)
-                    {
-                        if (isRight)
+                Debug.Log($"我使用了{skillName}");
+                switch (skillName)
+                {
+                    case "cloaking":
+                        if (!((Cloaking)skill).isUsed)
                         {
-                            bullet.SetDirection(Vector3.right);
+                            //使用隐身
+                            Debug.Log("我使用了隐身");
+                            _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
+                            ((Cloaking)skill).isUsed = true;
+                            isCloaking = true;
+                        }
+                        break;
+                    case "shield":
+                        if (!((Shield)skill).isUsed)
+                        {
+                            //使用护盾
+                            Debug.Log("我使用了护盾");
+                            ((Shield)skill).isUsed = true;
+                            isShielding = true;
+                        }
+                        break;
+                    case "attack":
+                        GameObject bulletObj = Instantiate(BulletPrefab);
+                        bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized * 1;
+                        Bullet bullet = bulletObj.GetComponent<Bullet>();
+                        if (x == 0 && y == 0)
+                        {
+                            if (isRight)
+                            {
+                                bullet.SetDirection(Vector3.right);
+                            }
+                            else
+                            {
+                                bullet.SetDirection(Vector3.left);
+                            }
                         }
                         else
                         {
-                            bullet.SetDirection(Vector3.left);
+                            bullet.SetDirection((new Vector3(x, y)).normalized);
                         }
-                    }
-                    else 
-                    {
-                        bullet.SetDirection((new Vector3(x, y)).normalized);
-                    }
-                    ((Attack)skill).times -= 1;
-                    Debug.Log("发射子弹");
-                    Debug.Log($"剩余子弹{((Attack)skill).times}");
-                    break;
+                        ((Attack)skill).times -= 1;
+                        Debug.Log("发射子弹");
+                        Debug.Log($"剩余子弹{((Attack)skill).times}");
+                        break;
+                }
+            }
+        }
+        else
+        {
+            if (skill != null && Input.GetKeyUp(KeyCode.KeypadEnter))
+            {
+                Debug.Log($"我使用了{skillName}");
+                switch (skillName)
+                {
+                    case "cloaking":
+                        if (!((Cloaking)skill).isUsed)
+                        {
+                            //使用隐身
+                            Debug.Log("我使用了隐身");
+                            _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
+                            ((Cloaking)skill).isUsed = true;
+                            isCloaking = true;
+                        }
+                        break;
+                    case "shield":
+                        if (!((Shield)skill).isUsed)
+                        {
+                            //使用护盾
+                            Debug.Log("我使用了护盾");
+                            ((Shield)skill).isUsed = true;
+                            isShielding = true;
+                        }
+                        break;
+                    case "attack":
+                        GameObject bulletObj = Instantiate(BulletPrefab);
+                        bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized * 1;
+                        Bullet bullet = bulletObj.GetComponent<Bullet>();
+                        if (x == 0 && y == 0)
+                        {
+                            if (isRight)
+                            {
+                                bullet.SetDirection(Vector3.right);
+                            }
+                            else
+                            {
+                                bullet.SetDirection(Vector3.left);
+                            }
+                        }
+                        else
+                        {
+                            bullet.SetDirection((new Vector3(x, y)).normalized);
+                        }
+                        ((Attack)skill).times -= 1;
+                        Debug.Log("发射子弹");
+                        Debug.Log($"剩余子弹{((Attack)skill).times}");
+                        break;
+                }
             }
         }
         if (skillName != null)
