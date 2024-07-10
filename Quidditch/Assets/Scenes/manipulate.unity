@@ -136,7 +136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4836995139046992764, guid: b691693c5739f0f4ab85a9c3d886f7e0, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6576435516132065339, guid: b691693c5739f0f4ab85a9c3d886f7e0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -280,7 +280,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 72de0c64f2c6a498096698322c976a67, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4253bd846e24fae45a1621f332c87320, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -300,9 +300,9 @@ Transform:
   m_GameObject: {fileID: 475607519}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.0596, y: -0.3726, z: 0}
-  m_LocalScale: {x: 5.816685, y: 5.8970327, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 5.0596, y: -0.37509, z: 0}
+  m_LocalScale: {x: 0.15, y: 0.152072, z: 0.025787884}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1468,8 +1468,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 72de0c64f2c6a498096698322c976a67, type: 3}
-  m_Color: {r: 0.10092555, g: 0.6076379, b: 0.8490566, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 12586b8ed2a3fce45913e94c05179b93, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1488,9 +1488,9 @@ Transform:
   m_GameObject: {fileID: 2136956341}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.43, y: -0.69, z: 0}
-  m_LocalScale: {x: 5.816685, y: 5.8970327, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -5.02, y: -0.29, z: 0}
+  m_LocalScale: {x: 0.15883501, y: 0.16102904, z: 0.027306791}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
