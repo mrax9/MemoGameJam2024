@@ -52,7 +52,7 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        else if (tag == "MovingBall")
+        else if (tag == "walkball")
         { 
             rigidbody2D.AddForce(lastDir * force /10 , ForceMode2D.Force);
             Destroy(gameObject);

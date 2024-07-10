@@ -16,6 +16,9 @@ TagManager:
   - Player1
   - Player2
   - walkballgenerator
+  - goldengenerator
+  - walkball
+  - goldenball
   layers:
   - Default
   - TransparentFX

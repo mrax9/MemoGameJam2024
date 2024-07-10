@@ -4,17 +4,19 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
-public class WalkBall : MonoBehaviour
+public class GoldenBall : MonoBehaviour
 {
     public float walkSpeed = 0.8f;
     public float PursuitSpeed = 8;
     public float checkDistance = 3;
     public float walkRadius = 2;
+    public float movingTime = 2;
     public float force;
     private GameObject player1;
     private GameObject player2;
     private bool isMoveing = false;
     private Rigidbody2D _Rigid;
+    private float thinkingTime = 0;
     private Vector2 lastDir;
     // Start is called before the first frame update
     void Start()
@@ -27,31 +29,24 @@ public class WalkBall : MonoBehaviour
     {
         float distance1 = Vector2.Distance(transform.position, player1.transform.position);
         float distance2 = Vector2.Distance(transform.position, player2.transform.position);
+        thinkingTime += Time.deltaTime;
         //¾àÀëÅÐ¶Ï
         if (distance1 < checkDistance)
         {
             if (!isMoveing)
             {
-                if (!player1.GetComponent<Player>().isCloaking)
-                {
-                    Attack(player1);
-                    Debug.Log($"¼ì²âµ½{player1.name}");
-                    //¹¥»÷Íæ¼ÒÒ»
-                }
-
+                Attack(player1);
+                Debug.Log($"¼ì²âµ½{player1.name}");
+                //¹¥»÷Íæ¼ÒÒ»
             }
         }
         else if (distance2 < checkDistance)
         {
             if (!isMoveing)
             {
-                if (!player1.GetComponent<Player>().isCloaking)
-                {
-                    //¹¥»÷Íæ¼Ò¶þ
-                    Debug.Log($"¼ì²âµ½{player2.name}");
-                    Attack(player2);
-                }
-                    
+                //¹¥»÷Íæ¼Ò¶þ
+                Debug.Log($"¼ì²âµ½{player2.name}");
+                Attack(player2);
             }
         }
         if (_Rigid.velocity == Vector2.zero) 
@@ -82,6 +77,7 @@ public class WalkBall : MonoBehaviour
     }
     void Attack(GameObject player)
     {
+        thinkingTime = 0;
         _Rigid.velocity = (player.transform.position - transform.position).normalized * PursuitSpeed;
         isMoveing = true;
     }
@@ -92,11 +88,7 @@ public class WalkBall : MonoBehaviour
         {
             collisionGO.GetComponent<Rigidbody2D>().AddForce(lastDir * force, ForceMode2D.Force);
             Player player = collisionGO.GetComponent<Player>();
-            if (!player.isShielding)
-            {
-                player.isshocking = true;
-            }
-            
+            player.isshocking = true;
         }
     }
 }

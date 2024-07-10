@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     public GameObject BulletPrefab;
     public int playerid = 1;
     public float force = 1000;
+    public GameObject shield;
     private Rigidbody2D _Rigid;
     private SpriteRenderer _Sr;
     private Skill skill;
@@ -24,14 +25,14 @@ public class Player : MonoBehaviour
     public int ballscore;
     public int goldenthievesscore;
     private bool isRight = true;
-    private bool isCloaking = false;
-    private bool isShielding = false;
+    public bool isCloaking = false;
+    public bool isShielding = false;
     public bool isshocking = false;
     private float shockingTimeCount = 0;
     private Vector2 lastDir;
+    private GameObject shieldCreated;
     void Start()
     {
-        score = ballscore + goldenthievesscore;
         _Sr = GetComponent<SpriteRenderer>();
         _Rigid = GetComponent<Rigidbody2D>();
         currentspeed = 0.0f;
@@ -75,16 +76,36 @@ public class Player : MonoBehaviour
 
     void Flip(float x)
     {
-        if (x < 0)
+        if (!isshocking)
         {
-            _Sr.flipX = true;
-            isRight = false;
-        }
+            if (playerid == 1)
+            {
+                if (x < 0)
+                {
+                    _Sr.flipX = true;
+                    isRight = false;
+                }
 
-        if (x > 0)
-        {
-            _Sr.flipX = false;
-            isRight = true;
+                if (x > 0)
+                {
+                    _Sr.flipX = false;
+                    isRight = true;
+                }
+            }
+            else if (playerid == 2)
+            {
+                if (x < 0)
+                {
+                    _Sr.flipX = false;
+                    isRight = true;
+                }
+
+                if (x > 0)
+                {
+                    _Sr.flipX = true;
+                    isRight = false;
+                }
+            }
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -96,7 +117,10 @@ public class Player : MonoBehaviour
             if (id != playerid)
             {
                 _Rigid.AddForce(-lastDir * force, ForceMode2D.Force);
-                isshocking = true;
+                if (!isShielding)
+                {
+                    isshocking = true;
+                }
             }
         }
     }
@@ -116,12 +140,12 @@ public class Player : MonoBehaviour
         switch (skillTag)
         {
             case "cloaking":
-                skill = new Cloaking("cloaking", 2);
+                skill = new Cloaking("cloaking", 15);
                 skillName = "cloaking";
                 profFlag = true;
                 break;
             case "shield":
-                skill = new Shield("shield", 2);
+                skill = new Shield("shield", 10);
                 skillName = "shield";
                 profFlag = true;
                 break;
@@ -172,6 +196,8 @@ public class Player : MonoBehaviour
             case "shield":
                 if (!((Shield)skill).isUsed)
                 {
+                    shieldCreated = Instantiate(shield);
+                    shieldCreated.transform.parent = transform;
                     ((Shield)skill).isUsed = true;
                     isShielding = true;
                 }
@@ -222,6 +248,7 @@ public class Player : MonoBehaviour
                     ((Shield)skill).duration -= Time.deltaTime;
                 else
                 {
+                    Destroy(shieldCreated);
                     skill = null;
                     skillName = null;
                     isShielding = false;

@@ -9,24 +9,42 @@ public class ObjectGenerator : MonoBehaviour
     public float generateLength;
     public float generateWidth;
     public int objectCount;
+    public float generatePropTime;
+    private Player player1Component;
+    private Player player2Component;
+    public int player1BallScore = 0;
+    public int player2BallScore = 0;
     public List<GameObject> skills = new List<GameObject>();
     public List<GameObject> generatedObjects = new List<GameObject>();
     private float timeOfNoScore = 0;
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameObject play1 = GameObject.FindGameObjectWithTag("Player1");
+        GameObject Play2 = GameObject.FindGameObjectWithTag("Player2");
+        player1Component = play1.GetComponent<Player>();
+        player2Component = Play2.GetComponent<Player>();
     }
     // Update is called once per frame
     void Update()
     {
-        if (generatedObjects.Count == 0)
+        if (player1BallScore != player1Component.ballscore)
+        {
+            timeOfNoScore = 0;
+            player1BallScore = player1Component.ballscore;
+        }
+        else if (player1BallScore != player1Component.ballscore)
+        {
+            timeOfNoScore = 0;
+            player2BallScore = player2Component.ballscore;
+        }
+        else if(generatedObjects.Count == 0)
         {
             timeOfNoScore += Time.deltaTime;
         }
-        if (timeOfNoScore > 3 && generatedObjects.Count == 0)
+        if (timeOfNoScore > generatePropTime && generatedObjects.Count == 0)
         {
-            //Debug.Log($"开始生成");
+            Debug.Log($"开始生成");
             for (int i = 0; i < objectCount; i++)
             {
                 GameObject profPrefab;
