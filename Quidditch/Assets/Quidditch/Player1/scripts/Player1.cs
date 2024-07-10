@@ -111,7 +111,6 @@ public class Player : MonoBehaviour
                         _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
                         ((Cloaking)skill).isUsed = true;
                         isCloaking = true;
-                        
                     }
                     break;
                 case "shield":

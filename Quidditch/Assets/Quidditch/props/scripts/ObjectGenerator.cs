@@ -24,7 +24,6 @@ public class ObjectGenerator : MonoBehaviour
         {
             timeOfNoScore += Time.deltaTime;
         }
-        
         if (timeOfNoScore > 3 && generatedObjects.Count == 0)
         {
             Debug.Log($"开始生成");
@@ -41,7 +40,7 @@ public class ObjectGenerator : MonoBehaviour
                     int profIndex = Random.Range(0, skills.Count);
                     profPrefab = skills[profIndex];
                     Vector2 generatorPosition = new Vector2(x, y);
-                    Colliders = Physics2D.OverlapBoxAll(generatorPosition, new Vector2(profPrefab.transform.localScale.x, profPrefab.transform.localScale.y), 0);
+                    Colliders = Physics2D.OverlapBoxAll(generatorPosition, new Vector2(profPrefab.transform.localScale.x/2, profPrefab.transform.localScale.y/2), 0);
                 }
                 while (Colliders.Length != 0);
                 GameObject skill = Instantiate(profPrefab, new Vector3(x, y, 0), Quaternion.identity);
