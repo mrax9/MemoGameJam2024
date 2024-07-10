@@ -27,7 +27,6 @@ public class Player : MonoBehaviour
     private Vector2 lastDir;
     void Start()
     {
-        
         _Sr = GetComponent<SpriteRenderer>();
         _Rigid = GetComponent<Rigidbody2D>();
         currentspeed = 0.0f;
@@ -103,29 +102,22 @@ public class Player : MonoBehaviour
         {
             case "cloaking":
                 skill = new Cloaking("cloaking", 2);
-                //Debug.Log($"������Ϊ{skill.skillName}");
-                //Debug.Log($"����ʱ��{((Cloaking)skill).duration}");
                 skillName = "cloaking";
                 profFlag = true;
                 break;
             case "shield":
                 skill = new Shield("shield", 2);
-                //Debug.Log($"������Ϊ{skill.skillName}");
-                //Debug.Log($"��ʱ��{((Shield)skill).duration}");
                 skillName = "shield";
                 profFlag = true;
                 break;
             case "attack":
                 skill = new Attack("attack",3) ;
-                //Debug.Log($"������Ϊ{skill.skillName}");
-                //Debug.Log($"�������ڴ���{((Attack)skill).times}");
                 skillName = "attack";
                 profFlag = true;
                 break;
         }
         if (profFlag)
         {
-            //Todo:�޸�ui�еĵ��߿�
             GameObject profGenerator = GameObject.FindGameObjectWithTag("propgenerator");
             ObjectGenerator objectGenerator = profGenerator.GetComponent<ObjectGenerator>();
             objectGenerator.generatedObjects.Remove(prof);
@@ -143,7 +135,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (skill != null && Input.GetKeyUp(KeyCode.Return))
+            if (skill != null && Input.GetKeyUp(KeyCode.KeypadEnter))
             {
                 UseSkil(x, y, playerid);
             }
@@ -152,14 +144,11 @@ public class Player : MonoBehaviour
     }
     void UseSkil(float x, float y, int playerid)
     {
-        //Debug.Log($"��ʹ����{skillName}");
         switch (skillName)
         {
             case "cloaking":
                 if (!((Cloaking)skill).isUsed)
                 {
-                    //ʹ������
-                    //Debug.Log("��ʹ��������");
                     _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
                     ((Cloaking)skill).isUsed = true;
                     isCloaking = true;
@@ -168,8 +157,6 @@ public class Player : MonoBehaviour
             case "shield":
                 if (!((Shield)skill).isUsed)
                 {
-                    //ʹ�û���
-                    //Debug.Log("��ʹ���˻���");
                     ((Shield)skill).isUsed = true;
                     isShielding = true;
                 }
@@ -194,8 +181,6 @@ public class Player : MonoBehaviour
                     bullet.BasicSet((new Vector3(x, y)).normalized, playerid);
                 }
                 ((Attack)skill).times -= 1;
-                //Debug.Log("�����ӵ�");
-                //Debug.Log($"ʣ���ӵ�{((Attack)skill).times}");
                 break;
         }
 
@@ -214,8 +199,6 @@ public class Player : MonoBehaviour
                     skillName = null;
                     _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 2);
                     isCloaking = false;
-                    //Debug.Log("��������");
-                    //��������
                 }
             }
             if (skillName == "shield" && ((Shield)skill).isUsed)
@@ -227,8 +210,6 @@ public class Player : MonoBehaviour
                     skill = null;
                     skillName = null;
                     isShielding = false;
-                    //Debug.Log("��������");
-                    //������
                 }
             }
             if ((skillName == "attack"))
@@ -237,8 +218,6 @@ public class Player : MonoBehaviour
                 {
                     skill = null;
                     skillName = null;
-                    //Debug.Log("�ӵ���ʹ�����");
-                    //��������
                 }
             }
         }
