@@ -55,6 +55,16 @@ public class Player : MonoBehaviour
             currentspeed = Mathf.MoveTowards(currentspeed, 0f, deceleration * Time.deltaTime);
         }
         Vector2 movement = inputDirection * currentspeed;
+        if (isshocking && shockingTimeCount < 3)
+        {
+            shockingTimeCount += Time.deltaTime;
+            movement = Vector2.zero;
+        }
+        else
+        {
+            shockingTimeCount = 0;
+            isshocking = false;
+        }
         _Rigid.velocity = movement;
     }
 
