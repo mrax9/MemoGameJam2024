@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -7,7 +8,10 @@ using static Unity.VisualScripting.Member;
 
 public class Player : MonoBehaviour
 {
-    public float speed = 3;
+    public float maxspeed = 3.0f;
+    public float acceleration = 1.0f;
+    public float deceleration = 2.0f;
+    public float currentspeed;
     public GameObject BulletPrefab;
     public int playerid = 1;
     public float force = 1000;
@@ -23,8 +27,11 @@ public class Player : MonoBehaviour
     private Vector2 lastDir;
     void Start()
     {
+        
         _Sr = GetComponent<SpriteRenderer>();
         _Rigid = GetComponent<Rigidbody2D>();
+        currentspeed = 0.0f;
+     
     }
     // Update is called once per frame
     void Update()
@@ -38,19 +45,18 @@ public class Player : MonoBehaviour
     }
     void Move(float x, float y)
     {
-        Vector2 velocity;
-        velocity = new Vector2(x * speed, y * speed);
-        if (isshocking && shockingTimeCount <= 3)
+        Vector2 inputDirection = new Vector2(x, y).normalized;
+        Vector2 accelerationVector = inputDirection * acceleration;
+        if (inputDirection.magnitude > 0)
         {
-            shockingTimeCount += Time.deltaTime;
-            velocity = Vector2.zero;
+            currentspeed = Mathf.MoveTowards(currentspeed, maxspeed, accelerationVector.magnitude * Time.deltaTime);
         }
         else
         {
-            shockingTimeCount = 0;
-            isshocking = false;
+            currentspeed = Mathf.MoveTowards(currentspeed, 0f, deceleration * Time.deltaTime);
         }
-        _Rigid.velocity = velocity;
+        Vector2 movement = inputDirection * currentspeed;
+        _Rigid.velocity = movement;
     }
 
     void Flip(float x)
@@ -89,7 +95,7 @@ public class Player : MonoBehaviour
        bool profFlag = false;
         if (skill != null)
         {
-            //Debug.Log("ÄúµÄ¼¼ÄÜÎ´Ê¹ÓÃÍê³É");
+            //Debug.Log("ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Î´Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½");
             return;
         }
         string skillTag = prof.tag;
@@ -97,29 +103,29 @@ public class Player : MonoBehaviour
         {
             case "cloaking":
                 skill = new Cloaking("cloaking", 2);
-                //Debug.Log($"¼¼ÄÜÃûÎª{skill.skillName}");
-                //Debug.Log($"ÒþÉíÊ±³¤{((Cloaking)skill).duration}");
+                //Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª{skill.skillName}");
+                //Debug.Log($"ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½{((Cloaking)skill).duration}");
                 skillName = "cloaking";
                 profFlag = true;
                 break;
             case "shield":
                 skill = new Shield("shield", 2);
-                //Debug.Log($"¼¼ÄÜÃûÎª{skill.skillName}");
-                //Debug.Log($"¶ÜÊ±³¤{((Shield)skill).duration}");
+                //Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª{skill.skillName}");
+                //Debug.Log($"ï¿½ï¿½Ê±ï¿½ï¿½{((Shield)skill).duration}");
                 skillName = "shield";
                 profFlag = true;
                 break;
             case "attack":
                 skill = new Attack("attack",3) ;
-                //Debug.Log($"¼¼ÄÜÃûÎª{skill.skillName}");
-                //Debug.Log($"¹¥»÷´æÔÚ´ÎÊý{((Attack)skill).times}");
+                //Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª{skill.skillName}");
+                //Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½{((Attack)skill).times}");
                 skillName = "attack";
                 profFlag = true;
                 break;
         }
         if (profFlag)
         {
-            //Todo:ÐÞ¸ÄuiÖÐµÄµÀ¾ß¿ò£¿
+            //Todo:ï¿½Þ¸ï¿½uiï¿½ÐµÄµï¿½ï¿½ß¿ï¿½
             GameObject profGenerator = GameObject.FindGameObjectWithTag("propgenerator");
             ObjectGenerator objectGenerator = profGenerator.GetComponent<ObjectGenerator>();
             objectGenerator.generatedObjects.Remove(prof);
@@ -137,7 +143,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (skill != null && Input.GetKeyUp(KeyCode.KeypadEnter))
+            if (skill != null && Input.GetKeyUp(KeyCode.Return))
             {
                 UseSkil(x, y, playerid);
             }
@@ -146,14 +152,14 @@ public class Player : MonoBehaviour
     }
     void UseSkil(float x, float y, int playerid)
     {
-        //Debug.Log($"ÎÒÊ¹ÓÃÁË{skillName}");
+        //Debug.Log($"ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½{skillName}");
         switch (skillName)
         {
             case "cloaking":
                 if (!((Cloaking)skill).isUsed)
                 {
-                    //Ê¹ÓÃÒþÉí
-                    //Debug.Log("ÎÒÊ¹ÓÃÁËÒþÉí");
+                    //Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                    //Debug.Log("ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
                     _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
                     ((Cloaking)skill).isUsed = true;
                     isCloaking = true;
@@ -162,8 +168,8 @@ public class Player : MonoBehaviour
             case "shield":
                 if (!((Shield)skill).isUsed)
                 {
-                    //Ê¹ÓÃ»¤¶Ü
-                    //Debug.Log("ÎÒÊ¹ÓÃÁË»¤¶Ü");
+                    //Ê¹ï¿½Ã»ï¿½ï¿½ï¿½
+                    //Debug.Log("ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Ë»ï¿½ï¿½ï¿½");
                     ((Shield)skill).isUsed = true;
                     isShielding = true;
                 }
@@ -188,8 +194,8 @@ public class Player : MonoBehaviour
                     bullet.BasicSet((new Vector3(x, y)).normalized, playerid);
                 }
                 ((Attack)skill).times -= 1;
-                //Debug.Log("·¢Éä×Óµ¯");
-                //Debug.Log($"Ê£Óà×Óµ¯{((Attack)skill).times}");
+                //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½");
+                //Debug.Log($"Ê£ï¿½ï¿½ï¿½Óµï¿½{((Attack)skill).times}");
                 break;
         }
 
@@ -208,8 +214,8 @@ public class Player : MonoBehaviour
                     skillName = null;
                     _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 2);
                     isCloaking = false;
-                    //Debug.Log("½áÊøÒþÉí");
-                    //½áÊøÒþÉí
+                    //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 }
             }
             if (skillName == "shield" && ((Shield)skill).isUsed)
@@ -221,8 +227,8 @@ public class Player : MonoBehaviour
                     skill = null;
                     skillName = null;
                     isShielding = false;
-                    //Debug.Log("½áÊø»¤¶Ü");
-                    //½áÊø¶Ü
+                    //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 }
             }
             if ((skillName == "attack"))
@@ -231,10 +237,11 @@ public class Player : MonoBehaviour
                 {
                     skill = null;
                     skillName = null;
-                    //Debug.Log("×Óµ¯ÒÑÊ¹ÓÃÍê³É");
-                    //½áÊø¹¥»÷
+                    //Debug.Log("ï¿½Óµï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½");
+                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 }
             }
         }
     }
+
 }
