@@ -7,6 +7,14 @@ TagManager:
   - Obstacles
   - ball
   - propgenerator
+  - attack
+  - shield
+  - cloaking
+  - goal
+  - player1score
+  - player2score
+  - Player1
+  - Player2
   layers:
   - Default
   - TransparentFX

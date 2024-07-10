@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Player : MonoBehaviour
 {
@@ -13,11 +14,16 @@ public class Player : MonoBehaviour
     private SpriteRenderer _Sr;
     private Skill skill;
     private string skillName;
+    public int score;
+    public int ballscore;
+    public int goldenthievesscore;
     private bool isRight = true;
     private bool isCloaking = false;
     private bool isShielding = false;
+    
     void Start()
     {
+        score = ballscore + goldenthievesscore;
         _Sr = GetComponent<SpriteRenderer>();
         _Rigid = GetComponent<Rigidbody2D>();
     }
