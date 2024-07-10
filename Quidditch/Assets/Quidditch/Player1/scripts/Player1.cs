@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speed = 3;
+    public float maxspeed = 3.0f;
+    public float acceleration = 1.0f;
+    public float deceleration = 2.0f;
+    public float currentspeed;
     public GameObject BulletPrefab;
     public int playerid = 1;
     private Rigidbody2D _Rigid;
@@ -18,8 +22,11 @@ public class Player : MonoBehaviour
     private bool isShielding = false;
     void Start()
     {
+        
         _Sr = GetComponent<SpriteRenderer>();
         _Rigid = GetComponent<Rigidbody2D>();
+        currentspeed = 0.0f;
+     
     }
 
     // Update is called once per frame
@@ -31,10 +38,20 @@ public class Player : MonoBehaviour
         Flip(x);
         UseSkill(x, y, playerid);
     }
-
     void Move(float x, float y)
     {
-        _Rigid.velocity = new Vector2(x * speed, y * speed);
+        Vector2 inputDirection = new Vector2(x, y).normalized;
+        Vector2 accelerationVector = inputDirection * acceleration;
+        if (inputDirection.magnitude > 0)
+        {
+            currentspeed = Mathf.MoveTowards(currentspeed, maxspeed, accelerationVector.magnitude * Time.deltaTime);
+        }
+        else
+        {
+            currentspeed = Mathf.MoveTowards(currentspeed, 0f, deceleration * Time.deltaTime);
+        }
+        Vector2 movement = inputDirection * currentspeed;
+        _Rigid.velocity = movement;
     }
 
     void Flip(float x)
@@ -153,7 +170,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (skill != null && Input.GetKeyUp(KeyCode.KeypadEnter))
+            if (skill != null && Input.GetKeyUp(KeyCode.Return))
             {
                 Debug.Log($"我使用了{skillName}");
                 switch (skillName)
@@ -244,4 +261,5 @@ public class Player : MonoBehaviour
             }
         }
     }
+
 }
