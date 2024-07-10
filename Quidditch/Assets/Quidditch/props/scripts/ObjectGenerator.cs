@@ -26,7 +26,7 @@ public class ObjectGenerator : MonoBehaviour
         }
         if (timeOfNoScore > 3 && generatedObjects.Count == 0)
         {
-            Debug.Log($"开始生成");
+            //Debug.Log($"开始生成");
             for (int i = 0; i < objectCount; i++)
             {
                 GameObject profPrefab;
@@ -44,7 +44,7 @@ public class ObjectGenerator : MonoBehaviour
                 }
                 while (Colliders.Length != 0);
                 GameObject skill = Instantiate(profPrefab, new Vector3(x, y, 0), Quaternion.identity);
-                Debug.Log($"生成{skill.name}成功");
+                //Debug.Log($"生成{skill.name}成功");
                 generatedObjects.Add(skill);
             }
             timeOfNoScore = 0;

@@ -9,11 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6576435516132065339}
+  - component: {fileID: -8950674075735015431}
   - component: {fileID: 7754041663911334347}
   - component: {fileID: 9058830432376289437}
   - component: {fileID: 7383770888189916237}
   m_Layer: 0
-  m_Name: ball
+  m_Name: WalkBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,6 +35,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8950674075735015431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4836995139046992764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4af857f35f0ced34cb521b69fdd68e5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 2
+  PursuitSpeed: 8
+  checkDistance: 4
+  walkRadius: 3
+  movingTime: 2
+  force: 3000
 --- !u!212 &7754041663911334347
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -75,7 +94,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 7ad14aea4071c0047a06351d86111a77, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b853a7d94b2fe7849a61b9825b5a2c2c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -134,7 +153,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 0.1
-  m_LinearDrag: 0.25
+  m_LinearDrag: 0.8
   m_AngularDrag: 0.5
   m_GravityScale: 0
   m_Material: {fileID: 6200000, guid: 3c09f7c91a361da49b5828120cbb706c, type: 2}
