@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class Player : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour
     public float currentspeed;
     public GameObject BulletPrefab;
     public int playerid = 1;
+    public float force = 1000;
     private Rigidbody2D _Rigid;
     private SpriteRenderer _Sr;
     private Skill skill;
@@ -20,15 +22,16 @@ public class Player : MonoBehaviour
     private bool isRight = true;
     private bool isCloaking = false;
     private bool isShielding = false;
+    public bool isshocking = false;
+    private float shockingTimeCount = 0;
+    private Vector2 lastDir;
     void Start()
     {
-        
         _Sr = GetComponent<SpriteRenderer>();
         _Rigid = GetComponent<Rigidbody2D>();
         currentspeed = 0.0f;
      
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -36,7 +39,8 @@ public class Player : MonoBehaviour
         float y = Input.GetAxis("Verticalplayer" + playerid);
         Move(x, y);
         Flip(x);
-        UseSkill(x, y, playerid);
+        PlayerUseSkill(x, y, playerid);
+        lastDir = _Rigid.velocity.normalized;
     }
     void Move(float x, float y)
     {
@@ -68,6 +72,19 @@ public class Player : MonoBehaviour
             isRight = true;
         }
     }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        string tag = collision.gameObject.tag;
+        if (tag == "Player1" || tag == "Player2")
+        {
+            int id = int.Parse(tag.Substring(tag.Length - 1, 1));
+            if (id != playerid)
+            {
+                _Rigid.AddForce(-lastDir * force, ForceMode2D.Force);
+                isshocking = true;
+            }
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         GetSkill(collision.gameObject);
@@ -77,7 +94,7 @@ public class Player : MonoBehaviour
        bool profFlag = false;
         if (skill != null)
         {
-            Debug.Log("ƒ˙µƒººƒ‹Œ¥ π”√ÕÍ≥…");
+            //Debug.Log("ÔøΩÔøΩÔøΩƒºÔøΩÔøΩÔøΩŒ¥ πÔøΩÔøΩÔøΩÔøΩÔøΩ");
             return;
         }
         string skillTag = prof.tag;
@@ -85,141 +102,91 @@ public class Player : MonoBehaviour
         {
             case "cloaking":
                 skill = new Cloaking("cloaking", 2);
-                Debug.Log($"ººƒ‹√˚Œ™{skill.skillName}");
-                Debug.Log($"“˛…Ì ±≥§{((Cloaking)skill).duration}");
                 skillName = "cloaking";
                 profFlag = true;
                 break;
             case "shield":
                 skill = new Shield("shield", 2);
-                Debug.Log($"ººƒ‹√˚Œ™{skill.skillName}");
-                Debug.Log($"∂‹ ±≥§{((Shield)skill).duration}");
                 skillName = "shield";
                 profFlag = true;
                 break;
             case "attack":
                 skill = new Attack("attack",3) ;
-                Debug.Log($"ººƒ‹√˚Œ™{skill.skillName}");
-                Debug.Log($"π•ª˜¥Ê‘⁄¥Œ ˝{((Attack)skill).times}");
                 skillName = "attack";
                 profFlag = true;
                 break;
         }
         if (profFlag)
         {
-            //Todo:–ﬁ∏ƒui÷–µƒµ¿æﬂøÚ£ø
             GameObject profGenerator = GameObject.FindGameObjectWithTag("propgenerator");
             ObjectGenerator objectGenerator = profGenerator.GetComponent<ObjectGenerator>();
             objectGenerator.generatedObjects.Remove(prof);
             Destroy(prof);
         }
     }
-    void UseSkill(float x, float y,int playerid)
+    void PlayerUseSkill(float x, float y,int playerid)
     {
         if (playerid == 1)
         {
             if (skill != null && Input.GetKeyUp(KeyCode.Space))
             {
-                Debug.Log($"Œ“ π”√¡À{skillName}");
-                switch (skillName)
-                {
-                    case "cloaking":
-                        if (!((Cloaking)skill).isUsed)
-                        {
-                            // π”√“˛…Ì
-                            Debug.Log("Œ“ π”√¡À“˛…Ì");
-                            _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
-                            ((Cloaking)skill).isUsed = true;
-                            isCloaking = true;
-                        }
-                        break;
-                    case "shield":
-                        if (!((Shield)skill).isUsed)
-                        {
-                            // π”√ª§∂‹
-                            Debug.Log("Œ“ π”√¡Àª§∂‹");
-                            ((Shield)skill).isUsed = true;
-                            isShielding = true;
-                        }
-                        break;
-                    case "attack":
-                        GameObject bulletObj = Instantiate(BulletPrefab);
-                        bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized * 1;
-                        Bullet bullet = bulletObj.GetComponent<Bullet>();
-                        if (x == 0 && y == 0)
-                        {
-                            if (isRight)
-                            {
-                                bullet.SetDirection(Vector3.right);
-                            }
-                            else
-                            {
-                                bullet.SetDirection(Vector3.left);
-                            }
-                        }
-                        else
-                        {
-                            bullet.SetDirection((new Vector3(x, y)).normalized);
-                        }
-                        ((Attack)skill).times -= 1;
-                        Debug.Log("∑¢…‰◊”µØ");
-                        Debug.Log($" £”‡◊”µØ{((Attack)skill).times}");
-                        break;
-                }
+                UseSkil(x, y, playerid);
             }
         }
         else
         {
-            if (skill != null && Input.GetKeyUp(KeyCode.Return))
+            if (skill != null && Input.GetKeyUp(KeyCode.KeypadEnter))
             {
-                Debug.Log($"Œ“ π”√¡À{skillName}");
-                switch (skillName)
-                {
-                    case "cloaking":
-                        if (!((Cloaking)skill).isUsed)
-                        {
-                            // π”√“˛…Ì
-                            Debug.Log("Œ“ π”√¡À“˛…Ì");
-                            _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
-                            ((Cloaking)skill).isUsed = true;
-                            isCloaking = true;
-                        }
-                        break;
-                    case "shield":
-                        if (!((Shield)skill).isUsed)
-                        {
-                            // π”√ª§∂‹
-                            Debug.Log("Œ“ π”√¡Àª§∂‹");
-                            ((Shield)skill).isUsed = true;
-                            isShielding = true;
-                        }
-                        break;
-                    case "attack":
-                        GameObject bulletObj = Instantiate(BulletPrefab);
-                        bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized * 1;
-                        Bullet bullet = bulletObj.GetComponent<Bullet>();
-                        if (x == 0 && y == 0)
-                        {
-                            if (isRight)
-                            {
-                                bullet.SetDirection(Vector3.right);
-                            }
-                            else
-                            {
-                                bullet.SetDirection(Vector3.left);
-                            }
-                        }
-                        else
-                        {
-                            bullet.SetDirection((new Vector3(x, y)).normalized);
-                        }
-                        ((Attack)skill).times -= 1;
-                        Debug.Log("∑¢…‰◊”µØ");
-                        Debug.Log($" £”‡◊”µØ{((Attack)skill).times}");
-                        break;
-                }
+                UseSkil(x, y, playerid);
             }
         }
+        EndSkill();
+    }
+    void UseSkil(float x, float y, int playerid)
+    {
+        switch (skillName)
+        {
+            case "cloaking":
+                if (!((Cloaking)skill).isUsed)
+                {
+                    _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 0.5f);
+                    ((Cloaking)skill).isUsed = true;
+                    isCloaking = true;
+                }
+                break;
+            case "shield":
+                if (!((Shield)skill).isUsed)
+                {
+                    ((Shield)skill).isUsed = true;
+                    isShielding = true;
+                }
+                break;
+            case "attack":
+                GameObject bulletObj = Instantiate(BulletPrefab);
+                bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized * 1;
+                Bullet bullet = bulletObj.GetComponent<Bullet>();
+                if (x == 0 && y == 0)
+                {
+                    if (isRight)
+                    {
+                        bullet.BasicSet(Vector3.right,playerid);
+                    }
+                    else
+                    {
+                        bullet.BasicSet(Vector3.left, playerid);
+                    }
+                }
+                else
+                {
+                    bullet.BasicSet((new Vector3(x, y)).normalized, playerid);
+                }
+                ((Attack)skill).times -= 1;
+                break;
+        }
+
+    }
+    void EndSkill()
+    {
         if (skillName != null)
         {
             if (skillName == "cloaking" && ((Cloaking)skill).isUsed)
@@ -232,8 +199,6 @@ public class Player : MonoBehaviour
                     skillName = null;
                     _Sr.color = new Color(_Sr.color.r, _Sr.color.g, _Sr.color.b, _Sr.color.a * 2);
                     isCloaking = false;
-                    Debug.Log("Ω· ¯“˛…Ì");
-                    //Ω· ¯“˛…Ì
                 }
             }
             if (skillName == "shield" && ((Shield)skill).isUsed)
@@ -245,8 +210,6 @@ public class Player : MonoBehaviour
                     skill = null;
                     skillName = null;
                     isShielding = false;
-                    Debug.Log("Ω· ¯ª§∂‹");
-                    //Ω· ¯∂‹
                 }
             }
             if ((skillName == "attack"))
@@ -255,8 +218,6 @@ public class Player : MonoBehaviour
                 {
                     skill = null;
                     skillName = null;
-                    Debug.Log("◊”µØ“— π”√ÕÍ≥…");
-                    //Ω· ¯π•ª˜
                 }
             }
         }

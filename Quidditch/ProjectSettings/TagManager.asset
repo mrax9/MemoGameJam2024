@@ -7,11 +7,12 @@ TagManager:
   - Obstacles
   - ball
   - propgenerator
+  - cloaking
   - attack
   - shield
-  - cloaking
-  - Player2
   - Player1
+  - Player2
+  - walkballgenerator
   layers:
   - Default
   - TransparentFX
