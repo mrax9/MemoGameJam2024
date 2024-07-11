@@ -9,7 +9,8 @@ public class WalkBall : MonoBehaviour
     public float walkSpeed = 0.8f;
     public float PursuitSpeed = 8;
     public float checkDistance = 3;
-    public float walkRadius = 2;
+    public float generateLength;
+    public float generateWidth;
     public float force;
     private GameObject player1;
     private GameObject player2;
@@ -45,7 +46,7 @@ public class WalkBall : MonoBehaviour
         {
             if (!isMoveing)
             {
-                if (!player1.GetComponent<Player>().isCloaking)
+                if (!player2.GetComponent<Player>().isCloaking)
                 {
                     //¹¥»÷Íæ¼Ò¶þ
                     Debug.Log($"¼ì²âµ½{player2.name}");
@@ -71,8 +72,8 @@ public class WalkBall : MonoBehaviour
         Collider2D[] collider2Ds;
         do
         {
-            x = Random.Range(transform.position.x - walkRadius, transform.position.x + walkRadius);
-            y = Random.Range(transform.position.y - walkRadius, transform.position.y + walkRadius);
+            x = Random.Range(-generateLength, generateLength);
+            y = Random.Range(-generateWidth, generateWidth);
             targetPosition = new Vector2(x, y);
             collider2Ds = Physics2D.OverlapCircleAll(targetPosition, transform.localScale.x / 2);
         }

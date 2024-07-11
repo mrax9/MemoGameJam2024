@@ -42,12 +42,13 @@ public class Bullet : MonoBehaviour
             int id = int.Parse(tag.Substring(tag.Length - 1, 1));
             if (id != owner)
             {
-                //Debug.Log($"当前的tag为{tag}当前的id为{id}");
-                if (collision.gameObject.GetComponent<Player>().isShielding)
+                Debug.Log($"当前的tag为{tag}当前的id为{id}");
+                if (!collision.gameObject.GetComponent<Player>().isShielding)
                 {
                     rigidbody2D.AddForce(lastDir * force, ForceMode2D.Force);
+                    Debug.Log($"子弹{gameObject.name}成功击中{collision.gameObject.name}");
                 }
-                //Debug.Log($"子弹{gameObject.name}成功击中{collision.gameObject.name}");
+                
                 Destroy(gameObject);
             }
             else if (id == owner)
@@ -57,7 +58,7 @@ public class Bullet : MonoBehaviour
         }
         else if (tag == "walkball")
         { 
-            rigidbody2D.AddForce(lastDir * force /10 , ForceMode2D.Force);
+            rigidbody2D.AddForce(lastDir * force /10, ForceMode2D.Force);
             Destroy(gameObject);
         }
         else 

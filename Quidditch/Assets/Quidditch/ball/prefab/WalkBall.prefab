@@ -47,11 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af857f35f0ced34cb521b69fdd68e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 2
+  walkSpeed: 4
   PursuitSpeed: 8
   checkDistance: 3
-  walkRadius: 3
-  movingTime: 2
+  generateLength: 8
+  generateWidth: 4
   force: 3000
 --- !u!212 &7754041663911334347
 SpriteRenderer:
@@ -93,7 +93,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 5cccea90ebbd61f478fa8d1b99b39c8c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     public float force = 1000;
     public GameObject shield;
     public GameObject shock;
+    public float shockTime;
     private Rigidbody2D _Rigid;
     private SpriteRenderer _Sr;
     private Skill skill;
@@ -64,7 +65,7 @@ public class Player : MonoBehaviour
             currentspeed = Mathf.MoveTowards(currentspeed, 0f, deceleration * Time.deltaTime);
         }
         Vector2 movement = inputDirection * currentspeed;
-        if (isshocking && shockingTimeCount < 3)
+        if (isshocking && shockingTimeCount < shockTime)
         {
             if (shockCreated == null)
             {
@@ -229,16 +230,30 @@ public class Player : MonoBehaviour
                 Bullet bullet = bulletObj.GetComponent<Bullet>();
                 if (x == 0 && y == 0)
                 {
+                    Vector2 bullectDirection;
                     if (isRight)
                     {
-                        bulletObj.transform.position = transform.position + Vector3.right;
-                        bullet.BasicSet(Vector3.right,playerid);
+                        if (playerid == 1)
+                        {
+                            bullectDirection = Vector3.right;
+                        }
+                        else
+                        {
+                            bullectDirection = Vector3.left;
+                        }
                     }
                     else
                     {
-                        bulletObj.transform.position = transform.position + Vector3.left;
-                        bullet.BasicSet(Vector3.left, playerid);
+                        if (playerid == 1)
+                        {
+                            bullectDirection = Vector3.left;
+                        }
+                        else
+                        {
+                            bullectDirection = Vector3.right;
+                        }
                     }
+                    bullet.BasicSet(bullectDirection, playerid);
                 }
                 else
                 {

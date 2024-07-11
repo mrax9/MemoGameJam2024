@@ -12,9 +12,7 @@ public class buff1 : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         // 示例玩家
         GameObject player1 = GameObject.FindGameObjectWithTag("Player1");
-        GameObject player2 = GameObject.FindGameObjectWithTag("Player2");
         Player playerCom1 = player1.GetComponent<Player>();
-        Player playerCom2 = player2.GetComponent<Player>();
         // 抽取一个随机坐骑
         Broom selectedBroom = Broom.ExtractBroom();
         Debug.Log($"玩家1抽取到坐骑：{selectedBroom.broomName}");
