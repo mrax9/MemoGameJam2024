@@ -41,9 +41,12 @@ public class Bullet : MonoBehaviour
         {
             int id = int.Parse(tag.Substring(tag.Length - 1, 1));
             if (id != owner)
-            {   
+            {
                 //Debug.Log($"当前的tag为{tag}当前的id为{id}");
-                rigidbody2D.AddForce(lastDir * force, ForceMode2D.Force);
+                if (collision.gameObject.GetComponent<Player>().isShielding)
+                {
+                    rigidbody2D.AddForce(lastDir * force, ForceMode2D.Force);
+                }
                 //Debug.Log($"子弹{gameObject.name}成功击中{collision.gameObject.name}");
                 Destroy(gameObject);
             }

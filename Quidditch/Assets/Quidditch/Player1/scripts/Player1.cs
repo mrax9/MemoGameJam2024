@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public int playerid = 1;
     public float force = 1000;
     public GameObject shield;
+    public GameObject shock;
     private Rigidbody2D _Rigid;
     private SpriteRenderer _Sr;
     private Skill skill;
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
     private float shockingTimeCount = 0;
     private Vector2 lastDir;
     private GameObject shieldCreated;
+    private GameObject shockCreated;
     void Start()
     {
         _Sr = GetComponent<SpriteRenderer>();
@@ -41,6 +43,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        score = goldenthievesscore + ballscore;
         float x = Input.GetAxis("Horizontalplayer" + playerid);
         float y = Input.GetAxis("Verticalplayer" + playerid);
         Move(x, y);
@@ -63,11 +66,21 @@ public class Player : MonoBehaviour
         Vector2 movement = inputDirection * currentspeed;
         if (isshocking && shockingTimeCount < 3)
         {
+            if (shockCreated == null)
+            {
+                //_Rigid.constraints = RigidbodyConstraints2D.None;
+                shockCreated = Instantiate(shock);
+                shockCreated.transform.parent = transform;
+                //transform.Rotate(Vector2.up * 2 * Time.deltaTime);
+            }
             shockingTimeCount += Time.deltaTime;
             movement = Vector2.zero;
         }
         else
         {
+            //transform.rotation = Quaternion.identity;
+            //_Rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+            Destroy(shockCreated);
             shockingTimeCount = 0;
             isshocking = false;
         }
@@ -116,11 +129,19 @@ public class Player : MonoBehaviour
             int id = int.Parse(tag.Substring(tag.Length - 1, 1));
             if (id != playerid)
             {
-                _Rigid.AddForce(-lastDir * force, ForceMode2D.Force);
                 if (!isShielding)
                 {
                     isshocking = true;
                 }
+                if (!(lastDir == Vector2.zero))
+                {
+                    _Rigid.AddForce(-lastDir * force, ForceMode2D.Force);
+                }
+                else
+                {
+                    _Rigid.AddForce(collision.gameObject.GetComponent<Player>().lastDir * force, ForceMode2D.Force);
+                }
+                
             }
         }
     }
@@ -204,21 +225,24 @@ public class Player : MonoBehaviour
                 break;
             case "attack":
                 GameObject bulletObj = Instantiate(BulletPrefab);
-                bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized * 1;
+                bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized;
                 Bullet bullet = bulletObj.GetComponent<Bullet>();
                 if (x == 0 && y == 0)
                 {
                     if (isRight)
                     {
+                        bulletObj.transform.position = transform.position + Vector3.right;
                         bullet.BasicSet(Vector3.right,playerid);
                     }
                     else
                     {
+                        bulletObj.transform.position = transform.position + Vector3.left;
                         bullet.BasicSet(Vector3.left, playerid);
                     }
                 }
                 else
                 {
+                    bulletObj.transform.position = transform.position + (new Vector3(x, y)).normalized;
                     bullet.BasicSet((new Vector3(x, y)).normalized, playerid);
                 }
                 ((Attack)skill).times -= 1;

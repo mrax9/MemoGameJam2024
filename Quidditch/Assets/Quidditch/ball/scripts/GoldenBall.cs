@@ -6,89 +6,67 @@ using UnityEngine.SocialPlatforms;
 
 public class GoldenBall : MonoBehaviour
 {
-    public float walkSpeed = 0.8f;
-    public float PursuitSpeed = 8;
+    public float AvoidSpeed = 8f;
     public float checkDistance = 3;
-    public float walkRadius = 2;
-    public float movingTime = 2;
-    public float force;
+    public int scoreOfGolden = 3;
+    public float livingTime = 10;
+    private float hasLivingTime = 0;
+    public float checkTime = 2;
+    private float checkingTime = 2;
     private GameObject player1;
     private GameObject player2;
-    private bool isMoveing = false;
+    private GameObject goldenGenerator;
     private Rigidbody2D _Rigid;
-    private float thinkingTime = 0;
-    private Vector2 lastDir;
     // Start is called before the first frame update
     void Start()
     {
         player1 = GameObject.FindGameObjectWithTag("Player1");
         player2 = GameObject.FindGameObjectWithTag("Player2");
+        goldenGenerator = GameObject.FindGameObjectWithTag("goldengenerator");
         _Rigid = GetComponent<Rigidbody2D>();
     }
     void Update()
     {
+        hasLivingTime += Time.deltaTime;
+        if (hasLivingTime >= livingTime)
+        {
+            goldenGenerator.GetComponent<GolenBallGenerator>().generatedObjects.Remove(gameObject);
+            Destroy(gameObject);
+
+
+        }
         float distance1 = Vector2.Distance(transform.position, player1.transform.position);
         float distance2 = Vector2.Distance(transform.position, player2.transform.position);
-        thinkingTime += Time.deltaTime;
-        //æ‡¿Î≈–∂œ
-        if (distance1 < checkDistance)
+        if (checkingTime > checkTime)
         {
-            if (!isMoveing)
+            //æ‡¿Î≈–∂œ
+            if (distance1 < checkDistance)
             {
-                Attack(player1);
-                Debug.Log($"ºÏ≤‚µΩ{player1.name}");
-                //π•ª˜ÕÊº““ª
+                Avoid(player1);
+                Debug.Log($"ºÏ≤‚µΩ{player2.name}");
             }
-        }
-        else if (distance2 < checkDistance)
-        {
-            if (!isMoveing)
+            else if (distance2 < checkDistance)
             {
                 //π•ª˜ÕÊº“∂˛
                 Debug.Log($"ºÏ≤‚µΩ{player2.name}");
-                Attack(player2);
+                Avoid(player2);
             }
         }
-        if (_Rigid.velocity == Vector2.zero) 
-        {
-            isMoveing = false;
-            //thinkingTime = 0;
-            //ª∫¬˝”Œ◊ﬂ
-            Move();
-        }
-        lastDir = _Rigid.velocity.normalized;
+        checkingTime += Time.deltaTime;
     }
-    void Move()
+    void Avoid(GameObject player)
     {
-        float x;
-        float y;
-        Vector2 targetPosition;
-        Collider2D[] collider2Ds;
-        do
-        {
-            x = Random.Range(transform.position.x - walkRadius, transform.position.x + walkRadius);
-            y = Random.Range(transform.position.y - walkRadius, transform.position.y + walkRadius);
-            targetPosition = new Vector2(x, y);
-            collider2Ds = Physics2D.OverlapCircleAll(targetPosition, transform.localScale.x / 2);
-        }
-        while (collider2Ds.Length != 0);
-        Debug.Log("”Œ◊ﬂ«Úø™ º“∆∂Ø");
-        _Rigid.velocity = (targetPosition - new Vector2(transform.position.x, transform.position.y)).normalized * walkSpeed;
-    }
-    void Attack(GameObject player)
-    {
-        thinkingTime = 0;
-        _Rigid.velocity = (player.transform.position - transform.position).normalized * PursuitSpeed;
-        isMoveing = true;
+        checkingTime = 0;
+        _Rigid.velocity = (-(player.transform.position - transform.position)).normalized * AvoidSpeed;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject collisionGO = collision.gameObject;
         if (collisionGO.CompareTag("Player1") || collisionGO.CompareTag("Player2"))
         {
-            collisionGO.GetComponent<Rigidbody2D>().AddForce(lastDir * force, ForceMode2D.Force);
-            Player player = collisionGO.GetComponent<Player>();
-            player.isshocking = true;
+            collisionGO.GetComponent<Player>().goldenthievesscore += scoreOfGolden;
+            goldenGenerator.GetComponent<GolenBallGenerator>().generatedObjects.Remove(gameObject);
+            Destroy(gameObject);
         }
     }
 }

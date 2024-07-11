@@ -96,7 +96,6 @@ public class WalkBall : MonoBehaviour
             {
                 player.isshocking = true;
             }
-            
         }
     }
 }

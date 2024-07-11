@@ -12,8 +12,8 @@ public class ObjectGenerator : MonoBehaviour
     public float generatePropTime;
     private Player player1Component;
     private Player player2Component;
-    public int player1BallScore = 0;
-    public int player2BallScore = 0;
+    private int player1BallScore = 0;
+    private int player2BallScore = 0;
     public List<GameObject> skills = new List<GameObject>();
     public List<GameObject> generatedObjects = new List<GameObject>();
     private float timeOfNoScore = 0;
@@ -33,7 +33,7 @@ public class ObjectGenerator : MonoBehaviour
             timeOfNoScore = 0;
             player1BallScore = player1Component.ballscore;
         }
-        else if (player1BallScore != player1Component.ballscore)
+        else if (player2BallScore != player2Component.ballscore)
         {
             timeOfNoScore = 0;
             player2BallScore = player2Component.ballscore;
