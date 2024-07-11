@@ -7,5 +7,20 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/ball.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    guid: 53972a4de07fd12458180874cb6d6959
+  - enabled: 1
+    path: Assets/Scenes/OUT/Main.unity
+    guid: 7ac82e3ec36afc642b5f92e2ee699e3e
+  - enabled: 1
+    path: Assets/Scenes/OUT/game_rule1.unity
+    guid: b012883b95d647c4c82519b70b5c8231
+  - enabled: 1
+    path: Assets/Scenes/OUT/Lottery page.unity
+    guid: f35805159df56624dbc4cff3875aa58e
+  - enabled: 1
+    path: Assets/Scenes/OUT/game_rule2.unity
+    guid: 5e0f465c153d954429425c87d353a0ef
+  - enabled: 1
+    path: Assets/Scenes/OUT/win.unity
+    guid: 0f245601f960e694f9f59676b7485447
   m_configObjects: {}
